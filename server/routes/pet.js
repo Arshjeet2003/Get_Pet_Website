@@ -95,9 +95,9 @@ router.post('/addpet',fetchuser,[
 })
 
 // ROUTE 5: Add a favourite pet using: POST "/api/pets/addfavpet".
-router.post('/addfavpet',fetchuser, async (req,res)=>{
+router.post('/addfavpet/:id',fetchuser, async (req,res)=>{
     try {
-        const {petid} = req.body;
+        const petid = req.params.id;
 
         const pet_user_fav_rel = new Pet_User_Fav_Rel({pet: petid,user: req.user.id});
 
@@ -111,7 +111,23 @@ router.post('/addfavpet',fetchuser, async (req,res)=>{
     }
 })
 
-// ROUTE 6: Update an existing pet using: PUT "/api/pets/updatepet".
+// ROUTE 6: Delete an existing fav pet using: DELETE "/api/pets/removefavpet".
+router.delete('/removefavpet/:id',fetchuser, async (req,res)=>{
+    try {
+
+        const userPetFavRelations = await Pet_User_Fav_Rel.findOne({ pet: req.params.id, user: req.user.id });
+
+        temprel = await Pet_User_Fav_Rel.findByIdAndDelete(userPetFavRelations._id);
+
+        res.json({"Success" : "Pet has been unmarked"});
+    } 
+    catch(error){
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// ROUTE 7: Update an existing pet using: PUT "/api/pets/updatepet".
 router.put('/updatepet/:id',fetchuser, async (req,res)=>{
     const {name,description,location,animal_type,gender,height,age} = req.body;
 
@@ -143,7 +159,7 @@ router.put('/updatepet/:id',fetchuser, async (req,res)=>{
     }
 });
 
-// ROUTE 7: Delete an existing note using: DELETE "/api/pets/deletepet".
+// ROUTE 8: Delete an existing pet using: DELETE "/api/pets/deletepet".
 router.delete('/deletepet/:id',fetchuser, async (req,res)=>{
     try {
         let pet = await Pet.findById(req.params.id);

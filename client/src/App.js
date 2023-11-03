@@ -10,6 +10,7 @@ import Signup from './components/Signup';
 import PetState from './context/pets/PetState';
 import EditPet from './components/EditPet';
 import FavouritePet from './components/FavouritePet';
+import Chat from './Chat/Chat.jsx'
 
 function App() {
   const[alert,setAlert] = useState(null);
@@ -38,6 +39,7 @@ function App() {
           <Route exact path="/favpets" element={<FavouritePet showAlert={showAlert}/>}></Route>
           <Route exact path="/login" element={<Login showAlert={showAlert}/>}></Route>
           <Route exact path="/signup" element={<Signup showAlert={showAlert}/>}></Route>
+          <Route exact path="/chat" element={<Chat />}></Route>
         </Routes>
         </div>
       </BrowserRouter>

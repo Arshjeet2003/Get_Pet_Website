@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const FavouritePet = ()=>{
     
     const context = useContext(petContext);
-    const { pets,getFavPets } = context;
+    const { favpets,getFavPets } = context;
     let navigate = useNavigate();
 
     useEffect(()=>{
@@ -25,9 +25,9 @@ const FavouritePet = ()=>{
     <div className="row my-3">
       <h2>Favourite Pets</h2>
       <div className="container mx-2">
-      {pets.length===0 && 'No pets to display'}
+      {favpets.length===0 && 'No pets to display'}
       </div>
-      {pets.map((pet)=>{
+      {favpets.map((pet)=>{
         return <PetCard key={pet._id} pet={pet}/>
       })}
     </div>

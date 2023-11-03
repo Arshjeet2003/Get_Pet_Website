@@ -6,6 +6,7 @@ const PetState = (props)=>{
     const host = "http://localhost:5003"
 
     const [pets,setPets] = useState([]);
+    const [favpets,setfavPets] = useState([]);
 
     const getPets = async ()=>{
         const response = await fetch(`${host}/api/pets/getallpets`,{
@@ -36,7 +37,7 @@ const PetState = (props)=>{
             }
         });
         const json = await response.json();
-        setPets(json);
+        setfavPets(json);
     }
 
     const addPet = async (name,description,location,animal_type,gender,height,age)=>{
@@ -54,16 +55,26 @@ const PetState = (props)=>{
     }
 
     const addFavPet = async (id)=>{
-        const response = await fetch(`${host}/api/pets/addpet`,{
+        const response = await fetch(`${host}/api/pets/addfavpet/${id}`,{
             method: 'POST',
             headers:{
                 'Content-Type': 'application/json',
                 'auth-token': localStorage.getItem('token')
             },
-            body: JSON.stringify({id})
         });
-        const pet = await response.json();
-        setPets(pets.concat(pet));
+        const pet = await response.text();
+    }
+
+    const deleteFavPet = async (id)=>{
+        const response = await fetch(`${host}/api/pets/removefavpet/${id}`,{
+            method: 'DELETE',
+            headers:{
+                'auth-token': localStorage.getItem('token')
+            }
+        });
+        const json =  await response.text();
+        // const newPets = pets.filter((pet)=>{return pet._id!==id})
+        // setPets(newPets);
     }
 
     const deletePet = async (id)=>{
@@ -107,8 +118,8 @@ const PetState = (props)=>{
     }
 
     return (
-        <PetContext.Provider value={{pets,addPet,deletePet,editPet,getPets,getUserPets,
-            getFavPets,addFavPet}}>
+        <PetContext.Provider value={{pets,favpets,addPet,deletePet,editPet,getPets,getUserPets,
+            getFavPets,addFavPet,deleteFavPet}}>
             {props.children}
         </PetContext.Provider>
     );
